@@ -5,14 +5,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-
+builder.Services.AddScoped<MovieService>();
+builder.Services.AddScoped<SeatService>();
+builder.Services.AddScoped<BookingService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BioTimeDb;Trusted_Connection=True;"));
-builder.Services.AddScoped<MovieService>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

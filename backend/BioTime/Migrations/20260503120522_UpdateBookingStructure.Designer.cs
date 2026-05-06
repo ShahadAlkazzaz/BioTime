@@ -4,6 +4,7 @@ using BioTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BioTime.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260503120522_UpdateBookingStructure")]
+    partial class UpdateBookingStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,24 +37,14 @@ namespace BioTime.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Efternamn")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("BookingTime")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fornamn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ShowtimeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Telefon")
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ShowtimeId");
 
                     b.ToTable("Bookings");
                 });
@@ -149,15 +142,6 @@ namespace BioTime.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("Showtimes");
-                });
-
-            modelBuilder.Entity("BioTime.Models.Booking", b =>
-                {
-                    b.HasOne("BioTime.Models.Showtime", "Showtime")
-                        .WithMany()
-                        .HasForeignKey("ShowtimeId");
-
-                    b.Navigation("Showtime");
                 });
 
             modelBuilder.Entity("BioTime.Models.Seat", b =>

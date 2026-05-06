@@ -16,7 +16,7 @@ namespace BioTime.Services
             return _context.Movies.ToList();
         }
 
-        public Movie GetById(int id)
+        public Movie? GetById(int id)
         {
             return _context.Movies.Find(id);
         }
@@ -28,7 +28,7 @@ namespace BioTime.Services
             return movie;
         }
 
-        public Movie Update(int id, Movie updated)
+        public Movie? Update(int id, Movie updated)
         {
             var movie = _context.Movies.Find(id);
             if (movie == null) return null;

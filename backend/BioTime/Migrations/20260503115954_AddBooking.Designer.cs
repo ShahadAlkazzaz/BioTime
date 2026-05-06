@@ -4,6 +4,7 @@ using BioTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BioTime.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260503115954_AddBooking")]
+    partial class AddBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,28 +33,19 @@ namespace BioTime.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BookingNumber")
+                    b.Property<DateTime>("BookingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Efternamn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fornamn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ShowtimeId")
+                    b.Property<int>("SeatId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Telefon")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ShowtimeId");
+                    b.HasIndex("SeatId");
 
                     b.ToTable("Bookings");
                 });
@@ -107,9 +101,6 @@ namespace BioTime.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BookingId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SeatNumber")
                         .HasColumnType("int");
 
@@ -117,8 +108,6 @@ namespace BioTime.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookingId");
 
                     b.HasIndex("ShowtimeId");
 
@@ -153,26 +142,22 @@ namespace BioTime.Migrations
 
             modelBuilder.Entity("BioTime.Models.Booking", b =>
                 {
-                    b.HasOne("BioTime.Models.Showtime", "Showtime")
+                    b.HasOne("BioTime.Models.Seat", "Seat")
                         .WithMany()
-                        .HasForeignKey("ShowtimeId");
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Showtime");
+                    b.Navigation("Seat");
                 });
 
             modelBuilder.Entity("BioTime.Models.Seat", b =>
                 {
-                    b.HasOne("BioTime.Models.Booking", "Booking")
-                        .WithMany("Seats")
-                        .HasForeignKey("BookingId");
-
                     b.HasOne("BioTime.Models.Showtime", "Showtime")
                         .WithMany()
                         .HasForeignKey("ShowtimeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Booking");
 
                     b.Navigation("Showtime");
                 });
@@ -194,11 +179,6 @@ namespace BioTime.Migrations
                     b.Navigation("Hall");
 
                     b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("BioTime.Models.Booking", b =>
-                {
-                    b.Navigation("Seats");
                 });
 #pragma warning restore 612, 618
         }
